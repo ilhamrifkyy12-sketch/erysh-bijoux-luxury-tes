@@ -1,15 +1,15 @@
 // Data Default dengan Tambahan Properti Stock
 const initialProducts = [
-    { id: 1, name: "Céleste Ring", category: "La Promesse", price: 699000, img: "💍", stock: 10, desc: "Crafted from premium 925 Sterling Silver finished with a thick layer of 18K Gold Plating for a luxurious shine." },
-    { id: 2, name: "Élise Ring", category: "La Promesse", price: 749000, img: "💎", stock: 5, desc: "Exclusive sapphire cut wrapped in stunning 18-karat white gold that captivates the eye flawlessly." },
-    { id: 3, name: "Étoile Necklace", category: "Lumière", price: 1099000, img: "📿", stock: 7, desc: "A sparkling star pendant necklace radiating the elegance and subtle cosmic beauty of modern women." },
-    { id: 4, name: "Amour Necklace", category: "Lumière", price: 1199000, img: "💝", stock: 4, desc: "Heart-designed premium necklace full of artistic detail, perfect for eternal promise tokens." },
-    { id: 5, name: "Aurora Earrings", category: "Éclat", price: 599000, img: "✨", stock: 12, desc: "Earrings adorned with beautiful opal stones reflecting the magical iridescent Northern Lights dawn." },
-    { id: 6, name: "Pearl Drop Earrings", category: "Éclat", price: 699000, img: "🦪", stock: 8, desc: "Specially selected organic natural saltwater pearls showcasing legendary white luxurious luster." },
-    { id: 7, name: "Grace Bracelet", category: "Grâce", price: 799000, img: "👑", stock: 3, desc: "Gold solid chain bracelet with an exclusive complex finely woven pattern built by master artisans." },
-    { id: 8, name: "Éternité Bracelet", category: "Grâce", price: 899000, img: "♾️", stock: 6, desc: "A flawless symbol of an infinite bond entirely encrusted with the finest micro diamonds gems." },
-    { id: 9, name: "Luna Anklet", category: "Rêverie", price: 499000, img: "🌙", stock: 15, desc: "Luxury delicate anklet decorated with a graceful tiny polished crescent moon gold ornament." },
-    { id: 10, name: "Fleur Anklet", category: "Rêverie", price: 549000, img: "🌸", stock: 2, desc: "Flower petal soft motif anklet masterfully crafted from solid rare Indonesian rose gold." }
+    { id: 1, name: "Céleste Ring", category: "La Promesse", price: 699000, img: "assets/celeste-ring.jpg", stock: 10, desc: "Crafted from premium 925 Sterling Silver finished with a thick layer of 18K Gold Plating for a luxurious shine." },
+    { id: 2, name: "Élise Ring", category: "La Promesse", price: 749000, img: "assets/elise-ring.jpg", stock: 5, desc: "Exclusive sapphire cut wrapped in stunning 18-karat white gold that captivates the eye flawlessly." },
+    { id: 3, name: "Étoile Necklace", category: "Lumière", price: 1099000, img: "assets/etoile-necklace.jpg", stock: 7, desc: "A sparkling star pendant necklace radiating the elegance and subtle cosmic beauty of modern women." },
+    { id: 4, name: "Amour Necklace", category: "Lumière", price: 1199000, img: "assets/amour-necklace.jpg", stock: 4, desc: "Heart-designed premium necklace full of artistic detail, perfect for eternal promise tokens." },
+    { id: 5, name: "Aurora Earrings", category: "Éclat", price: 599000, img: "assets/aurora-earrings.jpg", stock: 12, desc: "Earrings adorned with beautiful opal stones reflecting the magical iridescent Northern Lights dawn." },
+    { id: 6, name: "Pearl Drop Earrings", category: "Éclat", price: 699000, img: "assets/pearl-drop-earrings.jpg", stock: 8, desc: "Specially selected organic natural saltwater pearls showcasing legendary white luxurious luster." },
+    { id: 7, name: "Grace Bracelet", category: "Grâce", price: 799000, img: "assets/grace-bracelet.jpg", stock: 3, desc: "Gold solid chain bracelet with an exclusive complex finely woven pattern built by master artisans." },
+    { id: 8, name: "Éternité Bracelet", category: "Grâce", price: 899000, img: "assets/eternite-bracelet.jpg", stock: 6, desc: "A flawless symbol of an infinite bond entirely encrusted with the finest micro diamonds gems." },
+    { id: 9, name: "Luna Anklet", category: "Rêverie", price: 499000, img: "assets/luna-anklet.jpg", stock: 15, desc: "Luxury delicate anklet decorated with a graceful tiny polished crescent moon gold ornament." },
+    { id: 10, name: "Fleur Anklet", category: "Rêverie", price: 549000, img: "assets/fleur-anklet.jpg", stock: 2, desc: "Flower petal soft motif anklet masterfully crafted from solid rare Indonesian rose gold." }
 ];
 
 let products = JSON.parse(localStorage.getItem('erysh_products')) || initialProducts;
