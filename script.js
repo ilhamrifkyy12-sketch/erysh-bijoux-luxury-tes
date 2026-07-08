@@ -1,4 +1,4 @@
-// Data Default dengan Tambahan Properti Stock
+// Data Default dengan Jalur File Gambar dari Folder assets/
 const initialProducts = [
     { id: 1, name: "Céleste Ring", category: "La Promesse", price: 699000, img: "assets/celeste-ring.jpg", stock: 10, desc: "Crafted from premium 925 Sterling Silver finished with a thick layer of 18K Gold Plating for a luxurious shine." },
     { id: 2, name: "Élise Ring", category: "La Promesse", price: 749000, img: "assets/elise-ring.jpg", stock: 5, desc: "Exclusive sapphire cut wrapped in stunning 18-karat white gold that captivates the eye flawlessly." },
@@ -12,7 +12,14 @@ const initialProducts = [
     { id: 10, name: "Fleur Anklet", category: "Rêverie", price: 549000, img: "assets/fleur-anklet.jpg", stock: 2, desc: "Flower petal soft motif anklet masterfully crafted from solid rare Indonesian rose gold." }
 ];
 
-let products = JSON.parse(localStorage.getItem('erysh_products')) || initialProducts;
+// PEMBERSIH OTOMATIS BENTROK DATA: Jika di LocalStorage masih ada emoji (ciri khas ada simbol 💍), langsung reset total ke asset gambar.
+let storedProducts = localStorage.getItem('erysh_products');
+if (storedProducts && storedProducts.includes('💍')) {
+    localStorage.removeItem('erysh_products');
+    storedProducts = null;
+}
+
+let products = JSON.parse(storedProducts) || initialProducts;
 if(!localStorage.getItem('erysh_products')) {
     localStorage.setItem('erysh_products', JSON.stringify(products));
 }
@@ -33,7 +40,7 @@ function showPage(pageId) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Render Produk di Katalog dengan Label Stok Berdasarkan Sisa di Gudang
+// FIX: Menggunakan tag <img> untuk merender visual asset dari folder lokal
 function renderProducts() {
     const grid = document.getElementById('productGrid');
     if(!grid) return;
@@ -55,8 +62,8 @@ function renderProducts() {
         grid.innerHTML += `
             <div class="bg-white rounded-2xl p-6 border border-gray-100 flex flex-col justify-between group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                 <div class="cursor-pointer" onclick="openDetail(${p.id})">
-                    <div class="w-full h-40 bg-ivory rounded-xl flex items-center justify-center text-5xl mb-4 group-hover:scale-105 transition-transform duration-300 relative">
-                        ${p.img}
+                    <div class="w-full h-40 bg-ivory rounded-xl flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300 relative overflow-hidden">
+                        <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null; this.src='https://placehold.co/400x400?text=No+Image';">
                         <span class="absolute top-2 right-2 ${isOutOfStock ? 'bg-red-500 text-white' : 'bg-white/80 text-gray-500'} text-[9px] font-bold px-2 py-0.5 rounded-full">
                             ${isOutOfStock ? 'Habis' : `Stok: ${p.stock}`}
                         </span>
@@ -97,6 +104,7 @@ function handlePriceFilter(val) {
     renderProducts();
 }
 
+// FIX: Menggunakan tag <img> untuk modal detail produk
 function openDetail(id) {
     const product = products.find(p => p.id === id);
     if(!product) return;
@@ -105,7 +113,9 @@ function openDetail(id) {
     
     content.innerHTML = `
         <div class="text-center">
-            <div class="text-7xl my-4 drop-shadow-md">${product.img}</div>
+            <div class="w-40 h-40 mx-auto mb-4 overflow-hidden rounded-xl bg-ivory flex items-center justify-center">
+                <img src="${product.img}" alt="${product.name}" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null; this.src='https://placehold.co/400x400?text=No+Image';">
+            </div>
             <span class="text-xs uppercase text-gold font-bold tracking-wider">${product.category} Line Artisan</span>
             <h3 class="text-2xl font-bold font-title text-darkBlack my-2">${product.name}</h3>
             <p class="text-gray-600 text-sm px-2 my-4 font-light leading-relaxed">${product.desc}</p>
@@ -126,7 +136,6 @@ function toggleCartModal() {
     document.getElementById('cartModal').classList.toggle('hidden');
 }
 
-// Menambahkan ke Keranjang dengan Validasi Batas Maksimal Stok
 function addToCart(id) {
     const product = products.find(p => p.id === id);
     if(!product) return;
@@ -170,6 +179,7 @@ function removeFromCart(id) {
     updateCartUI();
 }
 
+// FIX: Menggunakan tag <img> berukuran kecil untuk thumbnail keranjang belanja
 function updateCartUI() {
     localStorage.setItem('belanjo_cart', JSON.stringify(cart));
     const count = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -188,7 +198,9 @@ function updateCartUI() {
                 list.innerHTML += `
                     <div class="flex items-center justify-between border-b pb-3 border-gray-100">
                         <div class="flex items-center space-x-3">
-                            <span class="text-2xl bg-gray-50 p-2 rounded-lg">${item.img}</span>
+                            <div class="w-12 h-12 bg-gray-50 rounded-lg overflow-hidden flex items-center justify-center border">
+                                <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/100x100?text=No';">
+                            </div>
                             <div>
                                 <h4 class="font-bold text-sm text-darkBlack">${item.name}</h4>
                                 <p class="text-xs text-gold font-medium">Rp ${parseInt(item.price).toLocaleString('id-ID')} x ${item.quantity}</p>
@@ -230,7 +242,6 @@ function goToCheckoutPage() {
     updateCartUI();
 }
 
-// Simulasi Payment Gateway - Otomatis Mengurangi Stok Barang di Database Lokal
 function processPayment(e) {
     e.preventDefault();
     const num = document.getElementById('billingPhone').value;
@@ -240,7 +251,6 @@ function processPayment(e) {
     }
     document.getElementById('phoneError').classList.add('hidden');
     
-    // VALIDASI ULANG STOK SEBELUM TRANSAKSI LUNAS
     for (let item of cart) {
         const targetProduct = products.find(p => p.id === item.id);
         if (!targetProduct || targetProduct.stock < item.quantity) {
@@ -249,15 +259,13 @@ function processPayment(e) {
         }
     }
 
-    // PROSES PENGURANGAN STOK
     cart.forEach(item => {
         const targetProduct = products.find(p => p.id === item.id);
         if (targetProduct) {
-            targetProduct.stock -= item.quantity; // kurangi jumlah stok asli
+            targetProduct.stock -= item.quantity;
         }
     });
 
-    // Simpan perubahan stok permanen ke LocalStorage
     localStorage.setItem('erysh_products', JSON.stringify(products));
 
     const gateway = document.querySelector('input[name="paymentGateway"]:checked').value;
@@ -266,11 +274,11 @@ function processPayment(e) {
     cart = [];
     updateCartUI();
     document.getElementById('checkoutForm').reset();
-    renderProducts(); // Refresh visual katalog utama
+    renderProducts();
     showPage('katalog-page');
 }
 
-// --- PANEL CONTROL ADMIN WEB (BISA EDIT STOK) ---
+// FIX: Menggunakan tag <img class="w-12 h-12"> untuk thumbnail pratinjau di baris Tabel Manajemen Admin
 function renderAdminTable() {
     const tbody = document.getElementById('adminTableBody');
     if(!tbody) return;
@@ -279,7 +287,11 @@ function renderAdminTable() {
     products.forEach(p => {
         tbody.innerHTML += `
             <tr class="hover:bg-gray-50 transition">
-                <td class="p-4 text-3xl w-20 text-center">${p.img}</td>
+                <td class="p-4 w-24 text-center">
+                    <div class="w-12 h-12 mx-auto overflow-hidden rounded-lg bg-gray-50 border flex items-center justify-center">
+                        <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/100x100?text=No';">
+                    </div>
+                </td>
                 <td class="p-4 font-bold text-darkBlack">${p.name}</td>
                 <td class="p-4"><span class="bg-gray-100 text-gray-600 text-xs font-semibold px-2.5 py-1 rounded-full">${p.category}</span></td>
                 <td class="p-4 font-semibold text-gold">Rp ${parseInt(p.price).toLocaleString('id-ID')}</td>
@@ -307,7 +319,7 @@ function openAdminEditModal(id) {
     document.getElementById('adminProductName').value = p.name;
     document.getElementById('adminProductCategory').value = p.category;
     document.getElementById('adminProductPrice').value = p.price;
-    document.getElementById('adminProductStock').value = p.stock; // Set value stok di form edit
+    document.getElementById('adminProductStock').value = p.stock;
     document.getElementById('adminProductDesc').value = p.desc;
     
     document.getElementById('adminModalTitle').innerText = 'Edit Rincian Koleksi Masterpiece';
@@ -325,7 +337,7 @@ function saveAdminProduct(e) {
     const name = document.getElementById('adminProductName').value;
     const category = document.getElementById('adminProductCategory').value;
     const price = parseInt(document.getElementById('adminProductPrice').value);
-    const stock = parseInt(document.getElementById('adminProductStock').value); // Ambil value stok baru
+    const stock = parseInt(document.getElementById('adminProductStock').value);
     const desc = document.getElementById('adminProductDesc').value;
 
     if(id) {
