@@ -12,21 +12,17 @@ const initialProducts = [
     { id: 10, name: "Fleur Anklet", category: "Rêverie", price: 549000, img: "assets/fleur-anklet.jpg", stock: 2, desc: "Flower petal soft motif anklet masterfully crafted from solid rare Indonesian rose gold." }
 ];
 
-// PEMBERSIH OTOMATIS BENTROK DATA LOCALSTORAGE
+// Sinkronisasi database produk utama
 let storedProducts = localStorage.getItem('erysh_products');
-if (storedProducts && storedProducts.includes('💍')) {
-    localStorage.removeItem('erysh_products');
-    storedProducts = null;
-}
-
 let products = JSON.parse(storedProducts) || initialProducts;
 if(!localStorage.getItem('erysh_products')) {
     localStorage.setItem('erysh_products', JSON.stringify(products));
 }
 
-// Simulasi Data Google Analytics State
-let simulatedRevenueTotal = parseInt(localStorage.getItem('analytics_revenue')) || 14500000;
+// DATABASE DATA PENJUALAN MASUK (REAL-TIME ORDER LOGS)
+let salesLog = JSON.parse(localStorage.getItem('erysh_sales_log')) || [];
 
+// State Keranjang Belanja & Filter Toko
 let cart = JSON.parse(localStorage.getItem('belanjo_cart')) || [];
 let currentCategory = 'all';
 let searchQuery = '';
@@ -39,12 +35,13 @@ function showPage(pageId) {
     
     if(pageId === 'admin-page') {
         renderAdminTable();
+        renderSalesTable();
         updateAnalyticsUI();
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// RENDER KATALOG USER (RESPONSIVE READY)
+// RENDER KATALOG USER
 function renderProducts() {
     const grid = document.getElementById('productGrid');
     if(!grid) return;
@@ -108,6 +105,7 @@ function handlePriceFilter(val) {
     renderProducts();
 }
 
+// 1. DETAIL PRODUK (UBAH LINE ARTISAN -> COLLECTION & HAPUS ACQUIRE ASSET)
 function openDetail(id) {
     const product = products.find(p => p.id === id);
     if(!product) return;
@@ -119,13 +117,13 @@ function openDetail(id) {
             <div class="w-40 h-40 mx-auto mb-4 overflow-hidden rounded-xl bg-ivory flex items-center justify-center border">
                 <img src="${product.img}" alt="${product.name}" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?auto=format&fit=crop&w=400&q=80';">
             </div>
-            <span class="text-xs uppercase text-gold font-bold tracking-wider">${product.category} Line Artisan</span>
+            <span class="text-xs uppercase text-gold font-bold tracking-wider">${product.category} Collection</span>
             <h3 class="text-xl sm:text-2xl font-bold font-title text-darkBlack my-2">${product.name}</h3>
             <p class="text-gray-500 text-xs sm:text-sm px-2 my-4 font-light leading-relaxed">${product.desc}</p>
             <p class="text-xs text-gray-400 mb-2">Available Quantity: <span class="font-bold text-darkBlack">${product.stock} Pcs</span></p>
             <p class="text-xl sm:text-2xl font-bold text-gold mb-6">Rp ${parseInt(product.price).toLocaleString('id-ID')}</p>
             <button onclick="addToCart(${product.id}); closeModal();" ${isOutOfStock ? 'disabled class="w-full bg-gray-200 text-gray-400 text-sm py-3.5 rounded-xl font-bold uppercase tracking-widest cursor-not-allowed"' : 'class="w-full bg-darkBlack text-gold text-sm py-3.5 rounded-xl font-bold uppercase tracking-widest hover:bg-gold hover:text-white transition"'} >
-                ${isOutOfStock ? 'Stok Habis' : 'Acquire Asset & Add To Cart'}
+                ${isOutOfStock ? 'Stok Habis' : 'Add To Cart'}
             </button>
         </div>`;
     document.getElementById('detailModal').classList.remove('hidden');
@@ -244,7 +242,7 @@ function goToCheckoutPage() {
     updateCartUI();
 }
 
-// INTEGRASI PAYMENT GATEWAY & UPDATE AUTOMATED METRIC ANALYTICS
+// 2. PROSES PEMBAYARAN DAN INTEGRASI KERJA DATA LANGSUNG MASUK KE ADMIN
 function processPayment(e) {
     e.preventDefault();
     const num = document.getElementById('billingPhone').value;
@@ -254,31 +252,47 @@ function processPayment(e) {
     }
     document.getElementById('phoneError').classList.add('hidden');
     
-    // Check Stock Availability before transaction settled
+    // Validasi stok produk sebelum pemotongan logistik
     for (let item of cart) {
         const targetProduct = products.find(p => p.id === item.id);
         if (!targetProduct || targetProduct.stock < item.quantity) {
-            alert(`Transaksi Gagal! Stok untuk produk "${item.name}" tidak mencukupi.`);
+            alert(`Transaksi Gagal! Stok untuk produk "${item.name}" tidak mencukupi di gudang.`);
             return;
         }
     }
 
+    let itemDetailsString = [];
     let currentTransactionTotal = 0;
+
+    // Kurangi stok barang dari inventory control
     cart.forEach(item => {
         const targetProduct = products.find(p => p.id === item.id);
         if (targetProduct) {
             targetProduct.stock -= item.quantity;
             currentTransactionTotal += (item.price * item.quantity);
+            itemDetailsString.push(`${item.name} (x${item.quantity})`);
         }
     });
 
-    // Tambah & Update Revenue metric secara kumulatif di LocalStorage
-    simulatedRevenueTotal += currentTransactionTotal;
-    localStorage.setItem('analytics_revenue', simulatedRevenueTotal);
+    const selectedGateway = document.querySelector('input[name="paymentGateway"]:checked').value;
+    
+    // Objek Data Pesanan Pelanggan Baru
+    const newOrder = {
+        name: document.getElementById('billingName').value,
+        phone: num,
+        email: document.getElementById('billingEmail').value,
+        address: document.getElementById('billingAddress').value,
+        paymentMethod: selectedGateway,
+        items: itemDetailsString.join(', '),
+        totalRevenue: currentTransactionTotal
+    };
+
+    // Push data masuk ke database Log Penjualan Admin
+    salesLog.push(newOrder);
+    localStorage.setItem('erysh_sales_log', JSON.stringify(salesLog));
     localStorage.setItem('erysh_products', JSON.stringify(products));
 
-    const gateway = document.querySelector('input[name="paymentGateway"]:checked').value;
-    alert(`[SIMULASI API GATEWAY SUCCESSFUL]\n\nSecure Protocol Ecosystem: ${gateway}\nCustomer: ${document.getElementById('billingName').value}\nTotal Invoice Value: Rp ${currentTransactionTotal.toLocaleString('id-ID')}\n\nStatus Transaksi: SETTLED (Lunas). Algoritma restock mengurangi inventori gudang.`);
+    alert(`✨ [PEMBAYARAN TERVERIFIKASI SUKSES] ✨\n\nMetode Bayar: ${selectedGateway}\nTotal Tagihan: Rp ${currentTransactionTotal.toLocaleString('id-ID')}\n\nStatus: Terbayar Lunas. Data transaksi pelanggan Anda telah otomatis terkirim langsung ke Halaman Admin Web!`);
     
     cart = [];
     updateCartUI();
@@ -287,14 +301,48 @@ function processPayment(e) {
     showPage('katalog-page');
 }
 
+// 3. REKAP RENDER TABEL DATA PENJUALAN MASUK PADA ADMIN
+function renderSalesTable() {
+    const tbody = document.getElementById('salesTableBody');
+    if(!tbody) return;
+    tbody.innerHTML = '';
+
+    if (salesLog.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-400 bg-gray-50/50">Belum ada data penjualan masuk dari pengguna.</td></tr>`;
+        return;
+    }
+
+    // Tampilkan log penjualan (urutan terbaru di atas)
+    [...salesLog].reverse().forEach(order => {
+        tbody.innerHTML += `
+            <tr class="hover:bg-indigo-50/30 transition text-xs sm:text-sm">
+                <td class="p-4">
+                    <div class="font-bold text-darkBlack">${order.name}</div>
+                    <div class="text-[11px] text-gray-400">${order.phone} | ${order.email}</div>
+                </td>
+                <td class="p-4 text-gray-500 max-w-[180px] truncate" title="${order.address}">${order.address}</td>
+                <td class="p-4"><span class="bg-indigo-100 text-indigo-700 font-medium text-[11px] px-2.5 py-1 rounded-md whitespace-nowrap">🛡️ ${order.paymentMethod}</span></td>
+                <td class="p-4 text-gray-700 italic font-light">${order.items}</td>
+                <td class="p-4 font-bold text-green-600 whitespace-nowrap">Rp ${order.totalRevenue.toLocaleString('id-ID')}</td>
+            </tr>`;
+    });
+}
+
 function updateAnalyticsUI() {
+    const totalRevenue = salesLog.reduce((sum, order) => sum + order.totalRevenue, 0);
+    
     const revEl = document.getElementById('analyticsRevenue');
     if(revEl) {
-        revEl.innerText = `Rp ${simulatedRevenueTotal.toLocaleString('id-ID')}`;
+        revEl.innerText = `Rp ${totalRevenue.toLocaleString('id-ID')}`;
+    }
+
+    const countEl = document.getElementById('analyticsOrderCount');
+    if(countEl) {
+        countEl.innerText = `${salesLog.length} Pesanan`;
     }
 }
 
-// RENDER ADMIN DATA CONTROL PANEL
+// RENDER ADMIN DATA CONTROL PANEL INVENTORY
 function renderAdminTable() {
     const tbody = document.getElementById('adminTableBody');
     if(!tbody) return;
