@@ -63,7 +63,7 @@
                     <p class="text-xs sm:text-sm opacity-80 font-light">At Érysh Bijoux, we believe true elegance is timeless. Our jewelry blends refined design with enduring quality, creating pieces that inspire confidence.</p>
                     <a href="#katalog" class="inline-block bg-gold text-white font-medium text-xs sm:text-sm tracking-wider uppercase px-6 sm:px-8 py-3 rounded-full shadow hover:bg-opacity-90 transition">Find Collection</a>
                 </div>
-                <div class="mt-6 md:mt-0 z-10 text-7xl sm:text-9xl opacity-90 drop-shadow-2xl animate-pulse">💎</div>
+                <div class="mt-6 md:mt-0 z-10 text-7xl sm:text-9xl opacity-90 drop-shadow-2xl">💎</div>
                 <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-gold opacity-10 rounded-full blur-3xl"></div>
             </div>
         </div>
@@ -109,31 +109,51 @@
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
                 <span class="text-xs text-gray-400 block uppercase font-bold">Total Visitor</span>
-                <span id="analyticsVisitors" class="text-xl sm:text-2xl font-bold text-darkBlack">1,240</span>
+                <span class="text-xl sm:text-2xl font-bold text-darkBlack">1,240</span>
                 <span class="text-[10px] text-green-500 block">▲ 12.4% Bounce Rate Stabil</span>
             </div>
             <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
                 <span class="text-xs text-gray-400 block uppercase font-bold">Conversion Rate</span>
-                <span id="analyticsConversion" class="text-xl sm:text-2xl font-bold text-gold">3.62%</span>
+                <span class="text-xl sm:text-2xl font-bold text-gold">3.62%</span>
                 <span class="text-[10px] text-gray-400 block">Standar Industri Retail</span>
             </div>
             <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
-                <span class="text-xs text-gray-400 block uppercase font-bold">Simulated Revenue</span>
-                <span id="analyticsRevenue" class="text-xl sm:text-2xl font-bold text-green-600">Rp 14.500.000</span>
-                <span class="text-[10px] text-green-500 block">Dari status SETTLED API</span>
+                <span class="text-xs text-gray-400 block uppercase font-bold">Total Revenue Store</span>
+                <span id="analyticsRevenue" class="text-xl sm:text-2xl font-bold text-green-600">Rp 0</span>
+                <span class="text-[10px] text-green-500 block">Real-time dari Penjualan Web</span>
             </div>
             <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
-                <span class="text-xs text-gray-400 block uppercase font-bold">Abandoned Cart</span>
-                <span id="analyticsAbandoned" class="text-xl sm:text-2xl font-bold text-red-400">18%</span>
-                <span class="text-[10px] text-red-400 block">Perlu optimasi promo</span>
+                <span class="text-xs text-gray-400 block uppercase font-bold">Orders Settled</span>
+                <span id="analyticsOrderCount" class="text-xl sm:text-2xl font-bold text-indigo-600">0 Transaksi</span>
+                <span class="text-[10px] text-indigo-500 block">Sukses via Payment Gateway</span>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100 mb-8">
+            <h3 class="text-lg font-bold font-title text-darkBlack mb-2">📥 Data Masuk Penjualan (Real-time Order Logs)</h3>
+            <p class="text-xs text-gray-400 mb-4">Setiap transaksi sukses dari halaman checkout pengguna akan otomatis langsung terekam ke database admin di bawah ini.</p>
+            <div class="overflow-x-auto rounded-xl border border-gray-100">
+                <table class="w-full text-left border-collapse text-sm min-w-[700px]">
+                    <thead>
+                        <tr class="bg-indigo-50/50 text-indigo-900 text-xs font-bold uppercase border-b border-gray-100">
+                            <th class="p-4">Customer Info</th>
+                            <th class="p-4">Alamat Pengiriman</th>
+                            <th class="p-4">Metode Bayar</th>
+                            <th class="p-4">Detail Perhiasan</th>
+                            <th class="p-4">Total Pendapatan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="salesTableBody" class="divide-y divide-gray-100 text-gray-700">
+                        </tbody>
+                </table>
             </div>
         </div>
 
         <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100 mb-8">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-4 mb-6 gap-4">
                 <div>
-                    <h2 class="text-xl sm:text-2xl font-bold font-title text-darkBlack">🔒 Central Admin Control Panel</h2>
-                    <p class="text-xs sm:text-sm text-gray-400">Manajemen inventory real-time terintegrasi LocalStorage.</p>
+                    <h2 class="text-xl sm:text-2xl font-bold font-title text-darkBlack">🔒 Central Admin Inventory Control</h2>
+                    <p class="text-xs sm:text-sm text-gray-400">Manajemen stok ketersediaan perhiasan di gudang store.</p>
                 </div>
                 <button onclick="openAdminAddModal()" class="w-full sm:w-auto bg-gold text-white font-semibold text-xs uppercase px-4 py-2.5 rounded-lg shadow hover:bg-opacity-90 transition text-center">+ Tambah Perhiasan Baru</button>
             </div>
@@ -192,7 +212,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Deskripsi Penuh Premium *</label>
-                    <textarea id="adminProductDesc" required rows="3" placeholder="Tulis rincian craftmanship material..." class="w-full border border-gray-200 rounded-lg p-2 text-sm focus:outline-none focus:border-gold"></textarea>
+                    <textarea id="adminProductDesc" required rows="3" placeholder="Tulis rincian material..." class="w-full border border-gray-200 rounded-lg p-2 text-sm focus:outline-none focus:border-gold"></textarea>
                 </div>
                 <button type="submit" class="w-full bg-darkBlack text-gold font-bold text-xs py-3 rounded-xl uppercase tracking-widest hover:bg-gold hover:text-white transition">Simpan Konfigurasi</button>
             </form>
@@ -201,62 +221,62 @@
 
     <div id="checkout-page" class="page-section hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 flex-grow">
         <h2 class="text-2xl sm:text-3xl font-bold font-title text-darkBlack mb-2">Checkout Verification</h2>
-        <p class="text-gray-500 text-xs sm:text-sm mb-8">Complete shipping details and select simulated payment ecosystem.</p>
+        <p class="text-gray-500 text-xs sm:text-sm mb-8">Lengkapi data tujuan pengiriman barang serta pilih gerbang pembayaran resmi store.</p>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-10">
             <div class="lg:col-span-2 bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100 space-y-6">
-                <h3 class="text-base sm:text-lg font-bold border-b pb-3 text-darkBlack">1. Shipping Info & Address Validation</h3>
+                <h3 class="text-base sm:text-lg font-bold border-b pb-3 text-darkBlack">1. Alamat Pengiriman Pelanggan</h3>
                 <form id="checkoutForm" onsubmit="processPayment(event)" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Full Name *</label>
+                        <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Nama Lengkap *</label>
                         <input type="text" id="billingName" required class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:border-gold">
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">WhatsApp Number *</label>
+                            <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Nomor WhatsApp Aktif *</label>
                             <input type="tel" id="billingPhone" required class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:border-gold" placeholder="08xxxxxxxxxx">
                             <span id="phoneError" class="text-red-500 text-[11px] hidden">Nomor WhatsApp tidak valid (Minimal 10 digit).</span>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Email *</label>
+                            <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Alamat Email *</label>
                             <input type="email" id="billingEmail" required class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:border-gold" placeholder="nama@email.com">
                         </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Full Address *</label>
-                        <textarea id="billingAddress" required rows="3" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:border-gold" placeholder="Alamat lengkap pengiriman..."></textarea>
+                        <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Alamat Rumah Lengkap *</label>
+                        <textarea id="billingAddress" required rows="3" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:border-gold" placeholder="Tuliskan nama jalan, nomor rumah, RT/RW, kecamatan, dan kota..."></textarea>
                     </div>
 
-                    <h3 class="text-base sm:text-lg font-bold border-b pb-3 pt-4 text-darkBlack">2. Secure Payment Gateway Ecosystem</h3>
+                    <h3 class="text-base sm:text-lg font-bold border-b pb-3 pt-4 text-darkBlack">2. Metode Pembayaran Aman Terverifikasi</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <label class="border-2 border-gray-200 rounded-xl p-4 flex flex-row sm:flex-col items-center justify-start sm:justify-center gap-3 cursor-pointer hover:border-gold transition relative">
-                            <input type="radio" name="paymentGateway" value="Midtrans" checked class="sm:absolute sm:top-3 sm:right-3 accent-gold">
+                            <input type="radio" name="paymentGateway" value="QRIS / e-Wallet" checked class="sm:absolute sm:top-3 sm:right-3 accent-gold">
+                            <span class="text-2xl">📱</span>
+                            <div class="flex flex-col sm:items-center">
+                                <span class="font-bold text-xs sm:text-sm">QRIS / e-Wallet</span>
+                                <span class="text-[10px] text-gray-400 text-center">Gopay, OVO, Dana, ShopeePay</span>
+                            </div>
+                        </label>
+                        <label class="border-2 border-gray-200 rounded-xl p-4 flex flex-row sm:flex-col items-center justify-start sm:justify-center gap-3 cursor-pointer hover:border-gold transition relative">
+                            <input type="radio" name="paymentGateway" value="Virtual Account Bank" class="sm:absolute sm:top-3 sm:right-3 accent-gold">
+                            <span class="text-2xl">🏦</span>
+                            <div class="flex flex-col sm:items-center">
+                                <span class="font-bold text-xs sm:text-sm">Virtual Account</span>
+                                <span class="text-[10px] text-gray-400 text-center">BCA, Mandiri, BNI, BRI, BSI</span>
+                            </div>
+                        </label>
+                        <label class="border-2 border-gray-200 rounded-xl p-4 flex flex-row sm:flex-col items-center justify-start sm:justify-center gap-3 cursor-pointer hover:border-gold transition relative">
+                            <input type="radio" name="paymentGateway" value="Kartu Kredit (Visa/Mastercard)" class="sm:absolute sm:top-3 sm:right-3 accent-gold">
                             <span class="text-2xl">💳</span>
                             <div class="flex flex-col sm:items-center">
-                                <span class="font-bold text-xs sm:text-sm">Midtrans</span>
-                                <span class="text-[10px] text-gray-400">Virtual Account</span>
-                            </div>
-                        </label>
-                        <label class="border-2 border-gray-200 rounded-xl p-4 flex flex-row sm:flex-col items-center justify-start sm:justify-center gap-3 cursor-pointer hover:border-gold transition relative">
-                            <input type="radio" name="paymentGateway" value="Xendit" class="sm:absolute sm:top-3 sm:right-3 accent-gold">
-                            <span class="text-2xl">⚡</span>
-                            <div class="flex flex-col sm:items-center">
-                                <span class="font-bold text-xs sm:text-sm">Xendit Instant</span>
-                                <span class="text-[10px] text-gray-400">QRIS / E-Wallet</span>
-                            </div>
-                        </label>
-                        <label class="border-2 border-gray-200 rounded-xl p-4 flex flex-row sm:flex-col items-center justify-start sm:justify-center gap-3 cursor-pointer hover:border-gold transition relative">
-                            <input type="radio" name="paymentGateway" value="PayPal Dummy" class="sm:absolute sm:top-3 sm:right-3 accent-gold">
-                            <span class="text-2xl">🅿️</span>
-                            <div class="flex flex-col sm:items-center">
-                                <span class="font-bold text-xs sm:text-sm">PayPal Sandbox</span>
-                                <span class="text-[10px] text-gray-400">Global Credit Card</span>
+                                <span class="font-bold text-xs sm:text-sm">Credit Card</span>
+                                <span class="text-[10px] text-gray-400 text-center">Visa / Mastercard Secured</span>
                             </div>
                         </label>
                     </div>
 
                     <button type="submit" class="w-full mt-6 bg-darkBlack text-gold font-bold tracking-wider uppercase py-4 rounded-xl border border-gold hover:bg-gold hover:text-white transition shadow-md text-xs sm:text-sm">
-                        Secure Checkout via Gateway Simulated API
+                        Selesaikan Pembayaran Aman
                     </button>
                 </form>
             </div>
@@ -296,7 +316,7 @@
                     <p><strong>2. Target Pasar & Segmentasi Pelanggan:</strong><br>
                     <span class="text-gray-600">Masyarakat kelas menengah ke atas (High-earners), rentang usia 23-45 tahun, pasangan yang mempersiapkan pernikahan, serta kolektor aksesori seni bernilai estetika premium.</span></p>
                     <p><strong>3. Analisis Pasar Singkat & Kompetitor:</strong><br>
-                    <span class="text-gray-600">Pasar perhiasan online berkembang pesat namun dihantui masalah kepercayaan visual vs produkt asli. Kompetitor utama adalah ritel konvensional (Tiffany&Co, Frank & co). Keunggulan kami adalah transparansi simulasi payment gateway real-time.</span></p>
+                    <span class="text-gray-600">Pasar perhiasan online berkembang pesat namun dihantui masalah kepercayaan visual vs produk asli. Kompetitor utama adalah ritel konvensional (Tiffany&Co, Frank & co). Keunggulan kami adalah integrasi data penjualan langsung dari user ke admin.</span></p>
                     <p><strong>4. Strategi Manajemen Produk & Katalog:</strong><br>
                     <span class="text-gray-600">Produk dibagi dalam 5 kategori koleksi bermakna filosofis tinggi Prancis (La Promesse, Lumière, Éclat, Grâce, Rêverie) menggunakan visual gambar resolusi tinggi sebagai mock-up digital serta deskripsi craftmanship yang detail.</span></p>
                     <p><strong>5. Model Bisnis & Revenue Stream:</strong><br>
@@ -306,11 +326,11 @@
                     <p><strong>6. Strategi Harga, Promosi, & Diskon:</strong><br>
                     <span class="text-gray-600">Menggunakan metode Value-Based Pricing. Promosi dilakukan lewat program 'Free Premium Shipping & Insurance' otomatis untuk mengeliminasi friksi psikologis biaya tambahan saat checkout.</span></p>
                     <p><strong>7. Process Checkout & Simulasi Payment Gateway:</strong><br>
-                    <span class="text-gray-600">Integrasi simulasi multi-gateway API dengan opsi Midtrans (Lokal/Bank Virtual), Xendit (Instant QRIS/E-Wallet), dan PayPal Sandbox (Kartu Kredit Global) guna memberikan fleksibilitas opsi keamanan bertransaksi bagi user.</span></p>
+                    <span class="text-gray-600">Integrasi gerbang pembayaran terpercaya terstandarisasi mencakup QRIS instan otomatis, Virtual Account antar bank, serta pengaman kartu kredit guna memberikan proteksi kenyamanan berbelanja.</span></p>
                     <p><strong>8. Rencana SEO, Keamanan, & Pemeliharaan:</strong><br>
-                    <span class="text-gray-600">Implementasi on-page SEO menggunakan struktur tag semantik HTML5 bersih, protokol HTTPS SSL enkripsi penuh, proteksi validasi form data dari manipulasi skrip berbahaya, dan audit berkala file lokal.</span></p>
+                    <span class="text-gray-600">Implementasi on-page SEO menggunakan struktur tag semantik HTML5 bersih, protokol HTTPS SSL enkripsi penuh, proteksi validasi form data dari manajemen skrip berbahaya, dan audit berkala file lokal.</span></p>
                     <p><strong>9. Rencana Penggunaan Data Analytics:</strong><br>
-                    <span class="text-gray-600">Memanfaatkan pelacakan event berbasis interaksi pengguna. Memonitor rasio klik katalog, melacak persentase keranjang belanja terbengkalai, dan menganalisis metode pembayaran gateway paling populer untuk menyusun keputusan restock barang.</span></p>
+                    <span class="text-gray-600">Memanfaatkan pelacakan event berbasis interaksi pengguna. Memonitor data pesanan masuk secara real-time di dashboard admin pusat, akumulasi total omset toko otomatis, dan pengaturan pengurangan stok logistik gudang secara otomatis.</span></p>
                     <p><strong>10. Kesimpulan Integrasi Ekosistem:</strong><br>
                     <span class="text-gold font-semibold">Seluruh komponen teknologi front-end berkolaborasi secara real-time dengan aspek logika administrasi bisnis retail mewah modern.</span></p>
                 </div>
@@ -338,11 +358,11 @@
                 <div id="cartItemsList" class="space-y-4 overflow-y-auto max-h-[65vh] pr-1"></div>
             </div>
             <div class="border-t pt-4 bg-white">
-                <div class="flex justify-between font-bold text-base sm:text-lg mb-4">
-                    <span>Total (Automatic Calc):</span>
+                <div class="flex justify-between font-bold text-lg mb-4">
+                    <span>Total:</span>
                     <span id="cartTotal" class="text-gold">Rp 0</span>
                 </div>
-                <button onclick="goToCheckoutPage()" class="w-full bg-darkBlack text-gold font-bold py-3.5 rounded-xl border border-gold uppercase tracking-wider text-xs sm:text-sm hover:bg-gold hover:text-white transition">
+                <button onclick="goToCheckoutPage()" class="w-full bg-darkBlack text-gold font-bold py-3.5 rounded-xl border border-gold uppercase tracking-wider text-sm hover:bg-gold hover:text-white transition">
                     Proceed to Shipping Address
                 </button>
             </div>
@@ -353,7 +373,7 @@
         <div class="max-w-7xl mx-auto px-4 text-center text-[11px] sm:text-xs tracking-wide space-y-3">
             <p class="text-white font-medium tracking-widest font-title text-sm">&copy; 2026 Érysh Bijoux. All Rights Reserved.</p>
             <p>Capstone Project KAIT II - Business Administration & Functional Digital Strategy Architecture.</p>
-            <p class="opacity-50">Simulated Encrypted Payment Gateway Core API: Midtrans Secured | Xendit Engine | PayPal Sandbox</p>
+            <p class="opacity-50">Secure Transactions Guaranteed Encryption Powered by Digital Merchant Ecosystem Platform.</p>
         </div>
     </footer>
 
