@@ -1,18 +1,108 @@
-// Data Default dengan Jalur File Gambar dari Folder assets/
+// Data Default dengan Spesifikasi Lengkap dan Rapi sesuai Draf Baru
 const initialProducts = [
-    { id: 1, name: "Céleste Ring", category: "La Promesse", price: 699000, img: "assets/celeste-ring.jpg", stock: 10, desc: "Crafted from premium 925 Sterling Silver finished with a thick layer of 18K Gold Plating for a luxurious shine." },
-    { id: 2, name: "Élise Ring", category: "La Promesse", price: 749000, img: "assets/elise-ring.jpg", stock: 5, desc: "Exclusive sapphire cut wrapped in stunning 18-karat white gold that captivates the eye flawlessly." },
-    { id: 3, name: "Étoile Necklace", category: "Lumière", price: 1099000, img: "assets/etoile-necklace.jpg", stock: 7, desc: "A sparkling star pendant necklace radiating the elegance and subtle cosmic beauty of modern women." },
-    { id: 4, name: "Amour Necklace", category: "Lumière", price: 1199000, img: "assets/amour-necklace.jpg", stock: 4, desc: "Heart-designed premium necklace full of artistic detail, perfect for eternal promise tokens." },
-    { id: 5, name: "Aurora Earrings", category: "Éclat", price: 599000, img: "assets/aurora-earrings.jpg", stock: 12, desc: "Earrings adorned with beautiful opal stones reflecting the magical iridescent Northern Lights dawn." },
-    { id: 6, name: "Pearl Drop Earrings", category: "Éclat", price: 699000, img: "assets/pearl-drop-earrings.jpg", stock: 8, desc: "Specially selected organic natural saltwater pearls showcasing legendary white luxurious luster." },
-    { id: 7, name: "Grace Bracelet", category: "Grâce", price: 799000, img: "assets/grace-bracelet.jpg", stock: 3, desc: "Gold solid chain bracelet with an exclusive complex finely woven pattern built by master artisans." },
-    { id: 8, name: "Éternité Bracelet", category: "Grâce", price: 899000, img: "assets/eternite-bracelet.jpg", stock: 6, desc: "A flawless symbol of an infinite bond entirely encrusted with the finest micro diamonds gems." },
-    { id: 9, name: "Luna Anklet", category: "Rêverie", price: 499000, img: "assets/luna-anklet.jpg", stock: 15, desc: "Luxury delicate anklet decorated with a graceful tiny polished crescent moon gold ornament." },
-    { id: 10, name: "Fleur Anklet", category: "Rêverie", price: 549000, img: "assets/fleur-anklet.jpg", stock: 2, desc: "Flower petal soft motif anklet masterfully crafted from solid rare Indonesian rose gold." }
+    { 
+        id: 1, 
+        name: "Céleste Ring", 
+        category: "La Promesse", 
+        price: 699000, 
+        img: "assets/celeste-ring.jpg", 
+        stock: 10, 
+        desc: "A timeless ring crafted from premium 925 Sterling Silver and finished with a thick layer of 18K Gold Plating for a luxurious shine that lasts. Featuring a brilliant AAAAA-grade Cubic Zirconia, each stone is carefully hand-set by skilled artisans to maximize sparkle while ensuring long-lasting durability.<br><br>Designed to be nickel-free, lead-free, and hypoallergenic, Céleste Ring is safe for sensitive skin and comfortable enough for everyday wear. Its protective anti-tarnish finish helps preserve its beauty with proper care.",
+        specs: ["Material: Premium 925 Sterling Silver", "Finish: Thick 18K Gold Plating", "Stone: AAAAA Cubic Zirconia", "Features: Hypoallergenic, Nickel-Free, Tarnish Resistant", "Packaging: Signature Érysh Bijoux Luxury Gift Box", "Warranty: 1-Year Manufacturing Warranty"]
+    },
+    { 
+        id: 2, 
+        name: "Élise Ring", 
+        category: "La Promesse", 
+        price: 749000, 
+        img: "assets/elise-ring.jpg", 
+        stock: 5, 
+        desc: "Élise Ring showcases intricate floral craftsmanship, meticulously handcrafted to achieve exceptional detail and elegance. Made from 925 Sterling Silver with a durable 18K Gold Plating, this ring is designed for long-lasting brilliance and everyday comfort.<br><br>Accented with premium AAAAA Cubic Zirconia, every stone is securely hand-set to create a luxurious sparkle comparable to natural diamonds. Its lightweight construction and hypoallergenic finish make it a timeless piece you'll reach for every day.",
+        specs: ["Material: Premium 925 Sterling Silver", "Finish: Thick 18K Gold Plating", "Stone: AAAAA Cubic Zirconia", "Features: Hypoallergenic, Tarnish Resistant, Lightweight", "Packaging: Signature Érysh Bijoux Luxury Gift Box", "Warranty: 1-Year Manufacturing Warranty"]
+    },
+    { 
+        id: 3, 
+        name: "Étoile Necklace", 
+        category: "Lumière", 
+        price: 1099000, 
+        img: "assets/etoile-necklace.jpg", 
+        stock: 7, 
+        desc: "Expertly handcrafted from 925 Sterling Silver with premium 18K Gold Plating, Étoile Necklace combines luxurious materials with refined craftsmanship. The elegant star pendant is adorned with carefully selected AAAAA Cubic Zirconia, delivering exceptional brilliance from every angle.<br><br>Its adjustable chain provides a comfortable fit, while the premium finishing ensures a smooth, polished surface designed for daily elegance and lasting durability.",
+        specs: ["Material: Premium 925 Sterling Silver", "Finish: Thick 18K Gold Plating", "Stone: AAAAA Cubic Zirconia", "Adjustable Chain", "Hypoallergenic", "Tarnish Resistant", "Luxury Gift Box Included", "1-Year Warranty"]
+    },
+    { 
+        id: 4, 
+        name: "Amour Necklace", 
+        category: "Lumière", 
+        price: 1199000, 
+        img: "assets/amour-necklace.jpg", 
+        stock: 4, 
+        desc: "Designed as a statement of timeless elegance, Amour Necklace features a beautifully polished pendant crafted from 925 Sterling Silver and coated with a premium layer of 18K Gold Plating. Enhanced with sparkling AAAAA Cubic Zirconia, it offers luxurious brilliance while remaining lightweight and comfortable.<br><br>Every piece undergoes strict quality inspection to ensure flawless finishing and long-lasting durability, making it a valuable addition to any jewelry collection.",
+        specs: ["Material: Premium 925 Sterling Silver", "Finish: Thick 18K Gold Plating", "Stone: AAAAA Cubic Zirconia", "Adjustable Chain", "Hypoallergenic", "Tarnish Resistant", "Luxury Gift Box Included", "1-Year Warranty"]
+    },
+    { 
+        id: 5, 
+        name: "Aurora Earrings", 
+        category: "Éclat", 
+        price: 599000, 
+        img: "assets/aurora-earrings.jpg", 
+        stock: 12, 
+        desc: "Aurora Earrings are handcrafted from 925 Sterling Silver with premium 18K Gold Plating, combining lightweight comfort with exceptional brilliance. Featuring hand-set AAAAA Cubic Zirconia, these earrings create a radiant sparkle perfect for both everyday elegance and formal occasions.<br><br>Designed for all-day comfort, they are hypoallergenic, durable, and finished with an anti-tarnish protective coating.",
+        specs: ["Material: Premium 925 Sterling Silver", "Finish: Thick 18K Gold Plating", "Stone: AAAAA Cubic Zirconia", "Hypoallergenic", "Tarnish Resistant", "Luxury Gift Box Included", "1-Year Warranty"]
+    },
+    { 
+        id: 6, 
+        name: "Pearl Drop Earrings", 
+        category: "Éclat", 
+        price: 699000, 
+        img: "assets/pearl-drop-earrings.jpg", 
+        stock: 8, 
+        desc: "Crafted with high-quality Freshwater Pearls and premium 925 Sterling Silver, Pearl Drop Earrings embody timeless sophistication. Each pearl is carefully selected for its smooth surface and natural luster, while the elegant floral accents are enhanced with sparkling AAAAA Cubic Zirconia.<br><br>The result is a refined piece that offers lasting beauty, superior comfort, and exceptional craftsmanship.",
+        specs: ["Material: Premium 925 Sterling Silver", "Finish: Thick 18K Gold Plating", "Stone: Freshwater Pearl & AAAAA Cubic Zirconia", "Hypoallergenic", "Tarnish Resistant", "Luxury Gift Box Included", "1-Year Warranty"]
+    },
+    { 
+        id: 7, 
+        name: "Belle Bracelet", 
+        category: "Grâce", 
+        price: 799000, 
+        img: "assets/grace-bracelet.jpg", 
+        stock: 3, 
+        desc: "Belle Bracelet is meticulously handcrafted from 925 Sterling Silver and finished with premium 18K Gold Plating to create an elegant shine that lasts. The delicate floral details are enhanced with brilliant AAAAA Cubic Zirconia, adding refined sparkle without overwhelming the design.<br><br>Its adjustable clasp ensures a comfortable fit, making it suitable for daily wear while maintaining a luxurious appearance.",
+        specs: ["Material: Premium 925 Sterling Silver", "Finish: Thick 18K Gold Plating", "Stone: AAAAA Cubic Zirconia", "Adjustable Clasp", "Hypoallergenic", "Tarnish Resistant", "Luxury Gift Box Included", "1-Year Warranty"]
+    },
+    { 
+        id: 8, 
+        name: "Éternité Bracelet", 
+        category: "Grâce", 
+        price: 899000, 
+        img: "assets/eternite-bracelet.jpg", 
+        stock: 6, 
+        desc: "Featuring a graceful infinity motif, Éternité Bracelet is crafted from 925 Sterling Silver with a premium 18K Gold Plating finish and accented by hand-set AAAAA Cubic Zirconia. Every detail is polished to perfection, creating a bracelet that combines elegance, durability, and everyday comfort.<br><br>Designed to retain its brilliance over time, it is the perfect investment piece for any jewelry lover.",
+        specs: ["Material: Premium 925 Sterling Silver", "Finish: Thick 18K Gold Plating", "Stone: AAAAA Cubic Zirconia", "Adjustable Clasp", "Hypoallergenic", "Tarnish Resistant", "Luxury Gift Box Included", "1-Year Warranty"]
+    },
+    { 
+        id: 9, 
+        name: "Luna Anklet", 
+        category: "Rêverie", 
+        price: 499000, 
+        img: "assets/luna-anklet.jpg", 
+        stock: 15, 
+        desc: "Luna Anklet is crafted from premium 925 Sterling Silver with durable 18K Gold Plating, offering lightweight comfort without compromising quality. The delicate moon charm is accented with brilliant AAAAA Cubic Zirconia, creating a subtle yet luxurious finish.<br><br>Perfect for everyday wear, this anklet is hypoallergenic, tarnish resistant, and designed to maintain its shine with proper care.",
+        specs: ["Material: Premium 925 Sterling Silver", "Finish: Thick 18K Gold Plating", "Stone: AAAAA Cubic Zirconia", "Adjustable Chain", "Hypoallergenic", "Tarnish Resistant", "Luxury Gift Box Included", "1-Year Warranty"]
+    },
+    { 
+        id: 10, 
+        name: "Fleur Anklet", 
+        category: "Rêverie", 
+        price: 549000, 
+        img: "assets/fleur-anklet.jpg", 
+        stock: 2, 
+        desc: "Designed with delicate floral accents, Fleur Anklet is handcrafted from 925 Sterling Silver and finished with premium 18K Gold Plating for lasting elegance. Adorned with carefully selected AAAAA Cubic Zirconia, it offers refined sparkle while remaining lightweight and comfortable for all-day wear.<br><br>Its premium craftsmanship and durable finish make it a timeless accessory you'll enjoy for years.",
+        specs: ["Material: Premium 925 Sterling Silver", "Finish: Thick 18K Gold Plating", "Stone: AAAAA Cubic Zirconia", "Adjustable Chain", "Hypoallergenic", "Tarnish Resistant", "Luxury Gift Box Included", "1-Year Warranty"]
+    }
 ];
 
-// Sinkronisasi database produk utama
+// Sinkronisasi database produk utama lokal
 let storedProducts = localStorage.getItem('erysh_products');
 let products = JSON.parse(storedProducts) || initialProducts;
 if(!localStorage.getItem('erysh_products')) {
@@ -105,26 +195,47 @@ function handlePriceFilter(val) {
     renderProducts();
 }
 
-// 1. DETAIL PRODUK (UBAH LINE ARTISAN -> COLLECTION & HAPUS ACQUIRE ASSET)
+// MODAL DETAIL PRODUK TERUPDATE DENGAN BULLET LIST SPESIFIKASI PREMIUM
 function openDetail(id) {
     const product = products.find(p => p.id === id);
     if(!product) return;
     const content = document.getElementById('modalContent');
     const isOutOfStock = product.stock <= 0;
     
+    // Generate markup untuk bagian spesifikasi
+    let specsHTML = '';
+    if (product.specs && product.specs.length > 0) {
+        specsHTML = `
+            <div class="text-left mt-4 border-t pt-4">
+                <h4 class="text-xs font-bold uppercase tracking-widest text-darkBlack mb-2">Specifications:</h4>
+                <ul class="list-disc list-inside text-xs text-gray-500 space-y-1 font-light">
+                    ${product.specs.map(spec => `<li>${spec}</li>`).join('')}
+                </ul>
+            </div>
+        `;
+    }
+
     content.innerHTML = `
-        <div class="text-center">
+        <div class="text-center max-h-[80vh] overflow-y-auto pr-1">
             <div class="w-40 h-40 mx-auto mb-4 overflow-hidden rounded-xl bg-ivory flex items-center justify-center border">
                 <img src="${product.img}" alt="${product.name}" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?auto=format&fit=crop&w=400&q=80';">
             </div>
             <span class="text-xs uppercase text-gold font-bold tracking-wider">${product.category} Collection</span>
             <h3 class="text-xl sm:text-2xl font-bold font-title text-darkBlack my-2">${product.name}</h3>
-            <p class="text-gray-500 text-xs sm:text-sm px-2 my-4 font-light leading-relaxed">${product.desc}</p>
-            <p class="text-xs text-gray-400 mb-2">Available Quantity: <span class="font-bold text-darkBlack">${product.stock} Pcs</span></p>
-            <p class="text-xl sm:text-2xl font-bold text-gold mb-6">Rp ${parseInt(product.price).toLocaleString('id-ID')}</p>
-            <button onclick="addToCart(${product.id}); closeModal();" ${isOutOfStock ? 'disabled class="w-full bg-gray-200 text-gray-400 text-sm py-3.5 rounded-xl font-bold uppercase tracking-widest cursor-not-allowed"' : 'class="w-full bg-darkBlack text-gold text-sm py-3.5 rounded-xl font-bold uppercase tracking-widest hover:bg-gold hover:text-white transition"'} >
-                ${isOutOfStock ? 'Stok Habis' : 'Add To Cart'}
-            </button>
+            
+            <div class="text-gray-500 text-xs sm:text-sm px-2 my-4 font-light text-justify leading-relaxed">
+                ${product.desc}
+            </div>
+            
+            ${specsHTML}
+            
+            <div class="mt-6 border-t pt-4">
+                <p class="text-xs text-gray-400 mb-1">Available Quantity: <span class="font-bold text-darkBlack">${product.stock} Pcs</span></p>
+                <p class="text-xl sm:text-2xl font-bold text-gold mb-4">Rp ${parseInt(product.price).toLocaleString('id-ID')}</p>
+                <button onclick="addToCart(${product.id}); closeModal();" ${isOutOfStock ? 'disabled class="w-full bg-gray-200 text-gray-400 text-sm py-3.5 rounded-xl font-bold uppercase tracking-widest cursor-not-allowed"' : 'class="w-full bg-darkBlack text-gold text-sm py-3.5 rounded-xl font-bold uppercase tracking-widest hover:bg-gold hover:text-white transition"'} >
+                    ${isOutOfStock ? 'Stok Habis' : 'Add To Cart'}
+                </button>
+            </div>
         </div>`;
     document.getElementById('detailModal').classList.remove('hidden');
 }
@@ -242,7 +353,6 @@ function goToCheckoutPage() {
     updateCartUI();
 }
 
-// 2. PROSES PEMBAYARAN DAN INTEGRASI KERJA DATA LANGSUNG MASUK KE ADMIN + REDIRECT SUCCESS PAGE
 function processPayment(e) {
     e.preventDefault();
     const num = document.getElementById('billingPhone').value;
@@ -252,7 +362,6 @@ function processPayment(e) {
     }
     document.getElementById('phoneError').classList.add('hidden');
     
-    // Validasi stok produk sebelum pemotongan logistik
     for (let item of cart) {
         const targetProduct = products.find(p => p.id === item.id);
         if (!targetProduct || targetProduct.stock < item.quantity) {
@@ -264,7 +373,6 @@ function processPayment(e) {
     let itemDetailsString = [];
     let currentTransactionTotal = 0;
 
-    // Kurangi stok barang dari inventory control secara otomatis
     cart.forEach(item => {
         const targetProduct = products.find(p => p.id === item.id);
         if (targetProduct) {
@@ -278,7 +386,6 @@ function processPayment(e) {
     const customerName = document.getElementById('billingName').value;
     const joinedItems = itemDetailsString.join(', ');
 
-    // Objek Data Pesanan Pelanggan Baru
     const newOrder = {
         name: customerName,
         phone: num,
@@ -289,29 +396,23 @@ function processPayment(e) {
         totalRevenue: currentTransactionTotal
     };
 
-    // Push data masuk ke database Log Penjualan Admin (Local Storage)
     salesLog.push(newOrder);
     localStorage.setItem('erysh_sales_log', JSON.stringify(salesLog));
     localStorage.setItem('erysh_products', JSON.stringify(products));
 
-    // INJEKSI DATA KE HALAMAN SUKSES (SUCCESS PAGE)
     document.getElementById('successPaymentMethod').innerText = `🛡️ ${selectedGateway}`;
     document.getElementById('successCustomerName').innerText = customerName;
     document.getElementById('successItems').innerText = joinedItems;
     document.getElementById('successItems').title = joinedItems; 
     document.getElementById('successTotal').innerText = `Rp ${currentTransactionTotal.toLocaleString('id-ID')}`;
 
-    // Kosongkan keranjang belanja
     cart = [];
     updateCartUI();
     document.getElementById('checkoutForm').reset();
     renderProducts();
-
-    // Alihkan tampilan langsung ke Payment Success Page secara mulus
     showPage('success-page');
 }
 
-// 3. REKAP RENDER TABEL DATA PENJUALAN MASUK PADA ADMIN
 function renderSalesTable() {
     const tbody = document.getElementById('salesTableBody');
     if(!tbody) return;
@@ -322,7 +423,6 @@ function renderSalesTable() {
         return;
     }
 
-    // Tampilkan log penjualan (urutan terbaru di atas)
     [...salesLog].reverse().forEach(order => {
         tbody.innerHTML += `
             <tr class="hover:bg-indigo-50/30 transition text-xs sm:text-sm">
@@ -340,19 +440,13 @@ function renderSalesTable() {
 
 function updateAnalyticsUI() {
     const totalRevenue = salesLog.reduce((sum, order) => sum + order.totalRevenue, 0);
-    
     const revEl = document.getElementById('analyticsRevenue');
-    if(revEl) {
-        revEl.innerText = `Rp ${totalRevenue.toLocaleString('id-ID')}`;
-    }
+    if(revEl) revEl.innerText = `Rp ${totalRevenue.toLocaleString('id-ID')}`;
 
     const countEl = document.getElementById('analyticsOrderCount');
-    if(countEl) {
-        countEl.innerText = `${salesLog.length} Pesanan`;
-    }
+    if(countEl) countEl.innerText = `${salesLog.length} Pesanan`;
 }
 
-// RENDER ADMIN DATA CONTROL PANEL INVENTORY
 function renderAdminTable() {
     const tbody = document.getElementById('adminTableBody');
     if(!tbody) return;
@@ -417,11 +511,13 @@ function saveAdminProduct(e) {
     if(id) {
         const index = products.findIndex(p => p.id == id);
         if(index !== -1) {
-            products[index] = { id: parseInt(id), name, category, price, img, stock, desc };
+            // Biarkan specs lama tetap tersimpan atau inisialisasi array kosong jika baru lewat panel admin
+            const oldSpecs = products[index].specs || [];
+            products[index] = { id: parseInt(id), name, category, price, img, stock, desc, specs: oldSpecs };
         }
     } else {
         const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
-        products.push({ id: newId, name, category, price, img, stock, desc });
+        products.push({ id: newId, name, category, price, img, stock, desc, specs: ["Premium Material Edition"] });
     }
 
     localStorage.setItem('erysh_products', JSON.stringify(products));
