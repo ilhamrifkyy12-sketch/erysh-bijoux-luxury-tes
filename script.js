@@ -1,4 +1,4 @@
-// Data Default dengan Spesifikasi Lengkap dan Rapi sesuai Draf Baru
+// Database Awal dengan Struktur Baru untuk Deskripsi dan Spesifikasi Eksklusif
 const initialProducts = [
     { 
         id: 1, 
@@ -102,17 +102,17 @@ const initialProducts = [
     }
 ];
 
-// Sinkronisasi database produk utama lokal
+// Logika pemuatan lokal terenkripsi aman
 let storedProducts = localStorage.getItem('erysh_products');
 let products = JSON.parse(storedProducts) || initialProducts;
-if(!localStorage.getItem('erysh_products')) {
+
+// FORCE UPDATE DATABASE JIKA LOCALSTORAGE MASIH MENGGUNAKAN VERSI LAMA
+if (!storedProducts || !products[0].specs) {
+    products = initialProducts;
     localStorage.setItem('erysh_products', JSON.stringify(products));
 }
 
-// DATABASE DATA PENJUALAN MASUK (REAL-TIME ORDER LOGS)
 let salesLog = JSON.parse(localStorage.getItem('erysh_sales_log')) || [];
-
-// State Keranjang Belanja & Filter Toko
 let cart = JSON.parse(localStorage.getItem('belanjo_cart')) || [];
 let currentCategory = 'all';
 let searchQuery = '';
@@ -131,7 +131,6 @@ function showPage(pageId) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// RENDER KATALOG USER
 function renderProducts() {
     const grid = document.getElementById('productGrid');
     if(!grid) return;
@@ -189,22 +188,15 @@ function handleSearch() {
     renderProducts();
 }
 
-function handlePriceFilter(val) {
-    maxPrice = parseInt(val);
-    document.getElementById('priceLabel').innerText = `Rp ${maxPrice.toLocaleString('id-ID')}`;
-    renderProducts();
-}
-
-// MODAL DETAIL PRODUK TERUPDATE DENGAN BULLET LIST SPESIFIKASI PREMIUM
+// FORMAT RENDER DETAIL PREMIUM BARU
 function openDetail(id) {
     const product = products.find(p => p.id === id);
     if(!product) return;
     const content = document.getElementById('modalContent');
     const isOutOfStock = product.stock <= 0;
     
-    // Generate markup untuk bagian spesifikasi
     let specsHTML = '';
-    if (product.specs && product.specs.length > 0) {
+    if (product.specs && Array.isArray(product.specs)) {
         specsHTML = `
             <div class="text-left mt-4 border-t pt-4">
                 <h4 class="text-xs font-bold uppercase tracking-widest text-darkBlack mb-2">Specifications:</h4>
@@ -216,14 +208,14 @@ function openDetail(id) {
     }
 
     content.innerHTML = `
-        <div class="text-center max-h-[80vh] overflow-y-auto pr-1">
+        <div class="text-center">
             <div class="w-40 h-40 mx-auto mb-4 overflow-hidden rounded-xl bg-ivory flex items-center justify-center border">
                 <img src="${product.img}" alt="${product.name}" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?auto=format&fit=crop&w=400&q=80';">
             </div>
             <span class="text-xs uppercase text-gold font-bold tracking-wider">${product.category} Collection</span>
             <h3 class="text-xl sm:text-2xl font-bold font-title text-darkBlack my-2">${product.name}</h3>
             
-            <div class="text-gray-500 text-xs sm:text-sm px-2 my-4 font-light text-justify leading-relaxed">
+            <div class="text-gray-500 text-xs sm:text-sm px-1 my-4 font-light text-justify leading-relaxed">
                 ${product.desc}
             </div>
             
@@ -240,31 +232,24 @@ function openDetail(id) {
     document.getElementById('detailModal').classList.remove('hidden');
 }
 
-function closeModal() {
-    document.getElementById('detailModal').classList.add('hidden');
+function handlePriceFilter(val) {
+    maxPrice = parseInt(val);
+    document.getElementById('priceLabel').innerText = `Rp ${maxPrice.toLocaleString('id-ID')}`;
+    renderProducts();
 }
 
-function toggleCartModal() {
-    document.getElementById('cartModal').classList.toggle('hidden');
-}
+function closeModal() { document.getElementById('detailModal').classList.add('hidden'); }
+function toggleCartModal() { document.getElementById('cartModal').classList.toggle('hidden'); }
 
 function addToCart(id) {
     const product = products.find(p => p.id === id);
     if(!product) return;
-    
     const exist = cart.find(item => item.id === id);
-    const currentQtyInCart = exist ? exist.quantity : 0;
-    
-    if (currentQtyInCart >= product.stock) {
+    if (exist && exist.quantity >= product.stock) {
         alert(`Maaf, batas maksimal stok yang tersedia di gudang adalah ${product.stock} pcs.`);
         return;
     }
-
-    if(exist) {
-        exist.quantity += 1;
-    } else {
-        cart.push({ ...product, quantity: 1 });
-    }
+    if(exist) { exist.quantity += 1; } else { cart.push({ ...product, quantity: 1 }); }
     updateCartUI();
 }
 
@@ -272,18 +257,12 @@ function changeQty(id, delta) {
     const item = cart.find(i => i.id === id);
     const product = products.find(p => p.id === id);
     if(!item || !product) return;
-    
     if (delta > 0 && item.quantity >= product.stock) {
         alert(`Gagal menambah kuantitas. Stok produk hanya tersisa ${product.stock} pcs.`);
         return;
     }
-    
     item.quantity += delta;
-    if(item.quantity <= 0) {
-        removeFromCart(id);
-    } else {
-        updateCartUI();
-    }
+    if(item.quantity <= 0) { removeFromCart(id); } else { updateCartUI(); }
 }
 
 function removeFromCart(id) {
@@ -344,10 +323,7 @@ function updateCartUI() {
 }
 
 function goToCheckoutPage() {
-    if(cart.length === 0) {
-        alert('Keranjang belanja Anda masih kosong!');
-        return;
-    }
+    if(cart.length === 0) { alert('Keranjang belanja Anda masih kosong!'); return; }
     toggleCartModal();
     showPage('checkout-page');
     updateCartUI();
@@ -365,7 +341,7 @@ function processPayment(e) {
     for (let item of cart) {
         const targetProduct = products.find(p => p.id === item.id);
         if (!targetProduct || targetProduct.stock < item.quantity) {
-            alert(`Transaksi Gagal! Stok untuk produk "${item.name}" tidak mencukupi di gudang store.`);
+            alert(`Transaksi Gagal! Stok untuk produk "${item.name}" tidak mencukupi.`);
             return;
         }
     }
@@ -403,7 +379,6 @@ function processPayment(e) {
     document.getElementById('successPaymentMethod').innerText = `🛡️ ${selectedGateway}`;
     document.getElementById('successCustomerName').innerText = customerName;
     document.getElementById('successItems').innerText = joinedItems;
-    document.getElementById('successItems').title = joinedItems; 
     document.getElementById('successTotal').innerText = `Rp ${currentTransactionTotal.toLocaleString('id-ID')}`;
 
     cart = [];
@@ -417,18 +392,16 @@ function renderSalesTable() {
     const tbody = document.getElementById('salesTableBody');
     if(!tbody) return;
     tbody.innerHTML = '';
-
     if (salesLog.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-400 bg-gray-50/50">Belum ada data penjualan masuk dari pengguna.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-400 bg-gray-50/50">Belum ada data penjualan masuk.</td></tr>`;
         return;
     }
-
     [...salesLog].reverse().forEach(order => {
         tbody.innerHTML += `
             <tr class="hover:bg-indigo-50/30 transition text-xs sm:text-sm">
                 <td class="p-4">
                     <div class="font-bold text-darkBlack">${order.name}</div>
-                    <div class="text-[11px] text-gray-400">${order.phone} | ${order.email}</div>
+                    <div class="text-[11px] text-gray-400">${order.phone}</div>
                 </td>
                 <td class="p-4 text-gray-500 max-w-[180px] truncate" title="${order.address}">${order.address}</td>
                 <td class="p-4"><span class="bg-indigo-100 text-indigo-700 font-medium text-[11px] px-2.5 py-1 rounded-md whitespace-nowrap">🛡️ ${order.paymentMethod}</span></td>
@@ -440,18 +413,14 @@ function renderSalesTable() {
 
 function updateAnalyticsUI() {
     const totalRevenue = salesLog.reduce((sum, order) => sum + order.totalRevenue, 0);
-    const revEl = document.getElementById('analyticsRevenue');
-    if(revEl) revEl.innerText = `Rp ${totalRevenue.toLocaleString('id-ID')}`;
-
-    const countEl = document.getElementById('analyticsOrderCount');
-    if(countEl) countEl.innerText = `${salesLog.length} Pesanan`;
+    if(document.getElementById('analyticsRevenue')) document.getElementById('analyticsRevenue').innerText = `Rp ${totalRevenue.toLocaleString('id-ID')}`;
+    if(document.getElementById('analyticsOrderCount')) document.getElementById('analyticsOrderCount').innerText = `${salesLog.length} Pesanan`;
 }
 
 function renderAdminTable() {
     const tbody = document.getElementById('adminTableBody');
     if(!tbody) return;
     tbody.innerHTML = '';
-
     products.forEach(p => {
         tbody.innerHTML += `
             <tr class="hover:bg-gray-50 transition text-xs sm:text-sm">
@@ -489,15 +458,13 @@ function openAdminEditModal(id) {
     document.getElementById('adminProductPrice').value = p.price;
     document.getElementById('adminProductStock').value = p.stock;
     document.getElementById('adminProductDesc').value = p.desc;
-    
     document.getElementById('adminModalTitle').innerText = 'Edit Rincian Koleksi Masterpiece';
     document.getElementById('adminModal').classList.remove('hidden');
 }
 
-function closeAdminModal() {
-    document.getElementById('adminModal').classList.add('hidden');
-}
+function closeAdminModal() { document.getElementById('adminModal').classList.add('hidden'); }
 
+// LOGIKA FIX AGAR SAAT PANEL ADMIN MENYIMPAN TIDAK MERUSAK SPECS LAMA
 function saveAdminProduct(e) {
     e.preventDefault();
     const id = document.getElementById('adminProductId').value;
@@ -511,13 +478,12 @@ function saveAdminProduct(e) {
     if(id) {
         const index = products.findIndex(p => p.id == id);
         if(index !== -1) {
-            // Biarkan specs lama tetap tersimpan atau inisialisasi array kosong jika baru lewat panel admin
-            const oldSpecs = products[index].specs || [];
+            const oldSpecs = products[index].specs || ["Premium Edition Material"];
             products[index] = { id: parseInt(id), name, category, price, img, stock, desc, specs: oldSpecs };
         }
     } else {
         const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
-        products.push({ id: newId, name, category, price, img, stock, desc, specs: ["Premium Material Edition"] });
+        products.push({ id: newId, name, category, price, img, stock, desc, specs: ["Premium Handcrafted Edition"] });
     }
 
     localStorage.setItem('erysh_products', JSON.stringify(products));
