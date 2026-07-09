@@ -12,7 +12,7 @@ const initialProducts = [
     { id: 10, name: "Fleur Anklet", category: "Rêverie", price: 549000, img: "assets/fleur-anklet.jpg", stock: 2, desc: "Flower petal soft motif anklet masterfully crafted from solid rare Indonesian rose gold." }
 ];
 
-// PEMBERSIH OTOMATIS BENTROK DATA: Jika di LocalStorage masih ada emoji (ciri khas ada simbol 💍), langsung reset total ke asset gambar.
+// PEMBERSIH OTOMATIS BENTROK DATA LOCALSTORAGE
 let storedProducts = localStorage.getItem('erysh_products');
 if (storedProducts && storedProducts.includes('💍')) {
     localStorage.removeItem('erysh_products');
@@ -23,6 +23,9 @@ let products = JSON.parse(storedProducts) || initialProducts;
 if(!localStorage.getItem('erysh_products')) {
     localStorage.setItem('erysh_products', JSON.stringify(products));
 }
+
+// Simulasi Data Google Analytics State
+let simulatedRevenueTotal = parseInt(localStorage.getItem('analytics_revenue')) || 14500000;
 
 let cart = JSON.parse(localStorage.getItem('belanjo_cart')) || [];
 let currentCategory = 'all';
@@ -36,11 +39,12 @@ function showPage(pageId) {
     
     if(pageId === 'admin-page') {
         renderAdminTable();
+        updateAnalyticsUI();
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// FIX: Menggunakan tag <img> untuk merender visual asset dari folder lokal
+// RENDER KATALOG USER (RESPONSIVE READY)
 function renderProducts() {
     const grid = document.getElementById('productGrid');
     if(!grid) return;
@@ -60,19 +64,19 @@ function renderProducts() {
     filtered.forEach(p => {
         const isOutOfStock = p.stock <= 0;
         grid.innerHTML += `
-            <div class="bg-white rounded-2xl p-6 border border-gray-100 flex flex-col justify-between group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div class="bg-white rounded-2xl p-5 sm:p-6 border border-gray-100 flex flex-col justify-between group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                 <div class="cursor-pointer" onclick="openDetail(${p.id})">
-                    <div class="w-full h-40 bg-ivory rounded-xl flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300 relative overflow-hidden">
-                        <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null; this.src='https://placehold.co/400x400?text=No+Image';">
-                        <span class="absolute top-2 right-2 ${isOutOfStock ? 'bg-red-500 text-white' : 'bg-white/80 text-gray-500'} text-[9px] font-bold px-2 py-0.5 rounded-full">
+                    <div class="w-full h-44 bg-ivory rounded-xl flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300 relative overflow-hidden">
+                        <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?auto=format&fit=crop&w=400&q=80';">
+                        <span class="absolute top-2 right-2 ${isOutOfStock ? 'bg-red-500 text-white' : 'bg-white/90 text-gray-700'} text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm">
                             ${isOutOfStock ? 'Habis' : `Stok: ${p.stock}`}
                         </span>
                     </div>
                     <span class="text-[10px] uppercase font-bold tracking-widest text-gold">${p.category} Collection</span>
-                    <h3 class="font-title font-bold text-darkBlack text-lg mt-1 group-hover:text-gold transition-colors">${p.name}</h3>
-                    <p class="text-sm font-semibold text-gray-700 mt-2">Rp ${parseInt(p.price).toLocaleString('id-ID')}</p>
+                    <h3 class="font-title font-bold text-darkBlack text-base sm:text-lg mt-1 group-hover:text-gold transition-colors truncate">${p.name}</h3>
+                    <p class="text-xs sm:text-sm font-semibold text-gray-700 mt-1">Rp ${parseInt(p.price).toLocaleString('id-ID')}</p>
                 </div>
-                <button onclick="addToCart(${p.id})" ${isOutOfStock ? 'disabled class="mt-4 w-full bg-gray-300 text-gray-500 text-xs py-2.5 rounded-xl uppercase tracking-wider font-medium cursor-not-allowed"' : 'class="mt-4 w-full bg-darkBlack text-white text-xs py-2.5 rounded-xl uppercase tracking-wider font-medium hover:bg-gold transition shadow-sm active:scale-95 duration-150"'} >
+                <button onclick="addToCart(${p.id})" ${isOutOfStock ? 'disabled class="mt-4 w-full bg-gray-200 text-gray-400 text-xs py-2.5 rounded-xl uppercase tracking-wider font-semibold cursor-not-allowed"' : 'class="mt-4 w-full bg-darkBlack text-white text-xs py-2.5 rounded-xl uppercase tracking-wider font-semibold hover:bg-gold transition shadow-sm active:scale-95 duration-150"'} >
                     ${isOutOfStock ? 'Out of Stock' : '+ Add To Cart'}
                 </button>
             </div>`;
@@ -104,7 +108,6 @@ function handlePriceFilter(val) {
     renderProducts();
 }
 
-// FIX: Menggunakan tag <img> untuk modal detail produk
 function openDetail(id) {
     const product = products.find(p => p.id === id);
     if(!product) return;
@@ -113,15 +116,15 @@ function openDetail(id) {
     
     content.innerHTML = `
         <div class="text-center">
-            <div class="w-40 h-40 mx-auto mb-4 overflow-hidden rounded-xl bg-ivory flex items-center justify-center">
-                <img src="${product.img}" alt="${product.name}" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null; this.src='https://placehold.co/400x400?text=No+Image';">
+            <div class="w-40 h-40 mx-auto mb-4 overflow-hidden rounded-xl bg-ivory flex items-center justify-center border">
+                <img src="${product.img}" alt="${product.name}" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?auto=format&fit=crop&w=400&q=80';">
             </div>
             <span class="text-xs uppercase text-gold font-bold tracking-wider">${product.category} Line Artisan</span>
-            <h3 class="text-2xl font-bold font-title text-darkBlack my-2">${product.name}</h3>
-            <p class="text-gray-600 text-sm px-2 my-4 font-light leading-relaxed">${product.desc}</p>
-            <p class="text-sm text-gray-500 mb-2">Sisa Stok di Gudang: <span class="font-bold text-darkBlack">${product.stock}</span></p>
-            <p class="text-2xl font-bold text-gold mb-6">Rp ${parseInt(product.price).toLocaleString('id-ID')}</p>
-            <button onclick="addToCart(${product.id}); closeModal();" ${isOutOfStock ? 'disabled class="w-full bg-gray-300 text-gray-500 text-sm py-3.5 rounded-xl font-bold uppercase tracking-widest cursor-not-allowed"' : 'class="w-full bg-darkBlack text-gold text-sm py-3.5 rounded-xl font-bold uppercase tracking-widest hover:bg-gold hover:text-white transition"'} >
+            <h3 class="text-xl sm:text-2xl font-bold font-title text-darkBlack my-2">${product.name}</h3>
+            <p class="text-gray-500 text-xs sm:text-sm px-2 my-4 font-light leading-relaxed">${product.desc}</p>
+            <p class="text-xs text-gray-400 mb-2">Available Quantity: <span class="font-bold text-darkBlack">${product.stock} Pcs</span></p>
+            <p class="text-xl sm:text-2xl font-bold text-gold mb-6">Rp ${parseInt(product.price).toLocaleString('id-ID')}</p>
+            <button onclick="addToCart(${product.id}); closeModal();" ${isOutOfStock ? 'disabled class="w-full bg-gray-200 text-gray-400 text-sm py-3.5 rounded-xl font-bold uppercase tracking-widest cursor-not-allowed"' : 'class="w-full bg-darkBlack text-gold text-sm py-3.5 rounded-xl font-bold uppercase tracking-widest hover:bg-gold hover:text-white transition"'} >
                 ${isOutOfStock ? 'Stok Habis' : 'Acquire Asset & Add To Cart'}
             </button>
         </div>`;
@@ -144,7 +147,7 @@ function addToCart(id) {
     const currentQtyInCart = exist ? exist.quantity : 0;
     
     if (currentQtyInCart >= product.stock) {
-        alert(`Maaf, Anda tidak bisa menambah barang lagi. Batas maksimal stok yang tersedia adalah ${product.stock} pcs.`);
+        alert(`Maaf, batas maksimal stok yang tersedia di gudang adalah ${product.stock} pcs.`);
         return;
     }
 
@@ -179,7 +182,6 @@ function removeFromCart(id) {
     updateCartUI();
 }
 
-// FIX: Menggunakan tag <img> berukuran kecil untuk thumbnail keranjang belanja
 function updateCartUI() {
     localStorage.setItem('belanjo_cart', JSON.stringify(cart));
     const count = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -192,25 +194,25 @@ function updateCartUI() {
     if(list) {
         list.innerHTML = '';
         if(cart.length === 0) {
-            list.innerHTML = `<div class="text-center py-12"><span class="text-4xl block mb-2">🛍️</span><p class="text-gray-400 text-sm">Shopping Cart is Empty.</p></div>`;
+            list.innerHTML = `<div class="text-center py-12"><span class="text-3xl block mb-2">🛍️</span><p class="text-gray-400 text-xs sm:text-sm">Shopping Cart is Empty.</p></div>`;
         } else {
             cart.forEach(item => {
                 list.innerHTML += `
                     <div class="flex items-center justify-between border-b pb-3 border-gray-100">
                         <div class="flex items-center space-x-3">
-                            <div class="w-12 h-12 bg-gray-50 rounded-lg overflow-hidden flex items-center justify-center border">
-                                <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/100x100?text=No';">
+                            <div class="w-12 h-12 bg-gray-50 rounded-lg overflow-hidden flex items-center justify-center border flex-shrink-0">
+                                <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?auto=format&fit=crop&w=100&q=80';">
                             </div>
                             <div>
-                                <h4 class="font-bold text-sm text-darkBlack">${item.name}</h4>
-                                <p class="text-xs text-gold font-medium">Rp ${parseInt(item.price).toLocaleString('id-ID')} x ${item.quantity}</p>
+                                <h4 class="font-bold text-xs sm:text-sm text-darkBlack truncate max-w-[120px]">${item.name}</h4>
+                                <p class="text-[11px] text-gold font-medium">Rp ${parseInt(item.price).toLocaleString('id-ID')} x ${item.quantity}</p>
                             </div>
                         </div>
-                        <div class="flex items-center space-x-2">
-                            <button onclick="changeQty(${item.id}, -1)" class="bg-gray-100 text-xs px-2.5 py-1 rounded-md hover:bg-gray-200 font-bold">-</button>
-                            <span class="text-sm font-bold w-4 text-center">${item.quantity}</span>
-                            <button onclick="changeQty(${item.id}, 1)" class="bg-gray-100 text-xs px-2.5 py-1 rounded-md hover:bg-gray-200 font-bold">+</button>
-                            <button onclick="removeFromCart(${item.id})" class="text-red-400 hover:text-red-600 text-xs pl-2 transition">Remove</button>
+                        <div class="flex items-center space-x-1.5 sm:space-x-2">
+                            <button onclick="changeQty(${item.id}, -1)" class="bg-gray-100 text-[10px] sm:text-xs px-2 py-0.5 rounded hover:bg-gray-200 font-bold">-</button>
+                            <span class="text-xs sm:text-sm font-bold w-4 text-center">${item.quantity}</span>
+                            <button onclick="changeQty(${item.id}, 1)" class="bg-gray-100 text-[10px] sm:text-xs px-2 py-0.5 rounded hover:bg-gray-200 font-bold">+</button>
+                            <button onclick="removeFromCart(${item.id})" class="text-red-400 hover:text-red-600 text-xs pl-1 sm:pl-2 transition">Rem</button>
                         </div>
                     </div>`;
             });
@@ -222,7 +224,7 @@ function updateCartUI() {
         checkSummary.innerHTML = '';
         cart.forEach(item => {
             checkSummary.innerHTML += `
-                <div class="flex justify-between items-center text-sm text-gray-600">
+                <div class="flex justify-between items-center text-xs sm:text-sm text-gray-600">
                     <span>${item.name} (x${item.quantity})</span>
                     <span class="font-semibold">Rp ${(item.price * item.quantity).toLocaleString('id-ID')}</span>
                 </div>`;
@@ -242,6 +244,7 @@ function goToCheckoutPage() {
     updateCartUI();
 }
 
+// INTEGRASI PAYMENT GATEWAY & UPDATE AUTOMATED METRIC ANALYTICS
 function processPayment(e) {
     e.preventDefault();
     const num = document.getElementById('billingPhone').value;
@@ -251,6 +254,7 @@ function processPayment(e) {
     }
     document.getElementById('phoneError').classList.add('hidden');
     
+    // Check Stock Availability before transaction settled
     for (let item of cart) {
         const targetProduct = products.find(p => p.id === item.id);
         if (!targetProduct || targetProduct.stock < item.quantity) {
@@ -259,17 +263,22 @@ function processPayment(e) {
         }
     }
 
+    let currentTransactionTotal = 0;
     cart.forEach(item => {
         const targetProduct = products.find(p => p.id === item.id);
         if (targetProduct) {
             targetProduct.stock -= item.quantity;
+            currentTransactionTotal += (item.price * item.quantity);
         }
     });
 
+    // Tambah & Update Revenue metric secara kumulatif di LocalStorage
+    simulatedRevenueTotal += currentTransactionTotal;
+    localStorage.setItem('analytics_revenue', simulatedRevenueTotal);
     localStorage.setItem('erysh_products', JSON.stringify(products));
 
     const gateway = document.querySelector('input[name="paymentGateway"]:checked').value;
-    alert(`[SIMULASI API GATEWAY SUKSES]\n\nMetode: ${gateway}\nNama: ${document.getElementById('billingName').value}\nTotal Nilai Asset: ${document.getElementById('checkoutTotal').innerText}\n\nStatus Transaksi: SETTLED (Lunas). Stok produk otomatis terpotong.`);
+    alert(`[SIMULASI API GATEWAY SUCCESSFUL]\n\nSecure Protocol Ecosystem: ${gateway}\nCustomer: ${document.getElementById('billingName').value}\nTotal Invoice Value: Rp ${currentTransactionTotal.toLocaleString('id-ID')}\n\nStatus Transaksi: SETTLED (Lunas). Algoritma restock mengurangi inventori gudang.`);
     
     cart = [];
     updateCartUI();
@@ -278,7 +287,14 @@ function processPayment(e) {
     showPage('katalog-page');
 }
 
-// FIX: Menggunakan tag <img class="w-12 h-12"> untuk thumbnail pratinjau di baris Tabel Manajemen Admin
+function updateAnalyticsUI() {
+    const revEl = document.getElementById('analyticsRevenue');
+    if(revEl) {
+        revEl.innerText = `Rp ${simulatedRevenueTotal.toLocaleString('id-ID')}`;
+    }
+}
+
+// RENDER ADMIN DATA CONTROL PANEL
 function renderAdminTable() {
     const tbody = document.getElementById('adminTableBody');
     if(!tbody) return;
@@ -286,19 +302,19 @@ function renderAdminTable() {
 
     products.forEach(p => {
         tbody.innerHTML += `
-            <tr class="hover:bg-gray-50 transition">
-                <td class="p-4 w-24 text-center">
-                    <div class="w-12 h-12 mx-auto overflow-hidden rounded-lg bg-gray-50 border flex items-center justify-center">
-                        <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/100x100?text=No';">
+            <tr class="hover:bg-gray-50 transition text-xs sm:text-sm">
+                <td class="p-4 w-20 text-center flex-shrink-0">
+                    <div class="w-10 h-10 mx-auto overflow-hidden rounded-lg bg-gray-50 border flex items-center justify-center">
+                        <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?auto=format&fit=crop&w=100&q=80';">
                     </div>
                 </td>
                 <td class="p-4 font-bold text-darkBlack">${p.name}</td>
-                <td class="p-4"><span class="bg-gray-100 text-gray-600 text-xs font-semibold px-2.5 py-1 rounded-full">${p.category}</span></td>
-                <td class="p-4 font-semibold text-gold">Rp ${parseInt(p.price).toLocaleString('id-ID')}</td>
+                <td class="p-4"><span class="bg-gray-100 text-gray-600 text-[10px] sm:text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap">${p.category}</span></td>
+                <td class="p-4 font-semibold text-gold whitespace-nowrap">Rp ${parseInt(p.price).toLocaleString('id-ID')}</td>
                 <td class="p-4 font-bold ${p.stock <= 2 ? 'text-red-500' : 'text-gray-700'}">${p.stock} Pcs</td>
-                <td class="p-4 text-center space-x-2">
-                    <button onclick="openAdminEditModal(${p.id})" class="text-blue-500 hover:text-blue-700 font-semibold text-xs border border-blue-200 px-2.5 py-1 rounded-md bg-blue-50/50 hover:bg-blue-50 transition">Edit</button>
-                    <button onclick="deleteAdminProduct(${p.id})" class="text-red-500 hover:text-red-700 font-semibold text-xs border border-red-200 px-2.5 py-1 rounded-md bg-red-50/50 hover:bg-red-50 transition">Hapus</button>
+                <td class="p-4 text-center space-y-1 sm:space-y-0 sm:space-x-2 whitespace-nowrap">
+                    <button onclick="openAdminEditModal(${p.id})" class="text-blue-500 hover:text-blue-700 font-semibold text-xs border border-blue-200 px-2 py-1 rounded bg-blue-50/50 transition inline-block">Edit</button>
+                    <button onclick="deleteAdminProduct(${p.id})" class="text-red-500 hover:text-red-700 font-semibold text-xs border border-red-200 px-2 py-1 rounded bg-red-50/50 transition inline-block">Hapus</button>
                 </td>
             </tr>`;
     });
