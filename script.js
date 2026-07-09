@@ -242,7 +242,7 @@ function goToCheckoutPage() {
     updateCartUI();
 }
 
-// 2. PROSES PEMBAYARAN DAN INTEGRASI KERJA DATA LANGSUNG MASUK KE ADMIN
+// 2. PROSES PEMBAYARAN DAN INTEGRASI KERJA DATA LANGSUNG MASUK KE ADMIN + REDIRECT SUCCESS PAGE
 function processPayment(e) {
     e.preventDefault();
     const num = document.getElementById('billingPhone').value;
@@ -256,7 +256,7 @@ function processPayment(e) {
     for (let item of cart) {
         const targetProduct = products.find(p => p.id === item.id);
         if (!targetProduct || targetProduct.stock < item.quantity) {
-            alert(`Transaksi Gagal! Stok untuk produk "${item.name}" tidak mencukupi di gudang.`);
+            alert(`Transaksi Gagal! Stok untuk produk "${item.name}" tidak mencukupi di gudang store.`);
             return;
         }
     }
@@ -264,7 +264,7 @@ function processPayment(e) {
     let itemDetailsString = [];
     let currentTransactionTotal = 0;
 
-    // Kurangi stok barang dari inventory control
+    // Kurangi stok barang dari inventory control secara otomatis
     cart.forEach(item => {
         const targetProduct = products.find(p => p.id === item.id);
         if (targetProduct) {
@@ -275,30 +275,40 @@ function processPayment(e) {
     });
 
     const selectedGateway = document.querySelector('input[name="paymentGateway"]:checked').value;
-    
+    const customerName = document.getElementById('billingName').value;
+    const joinedItems = itemDetailsString.join(', ');
+
     // Objek Data Pesanan Pelanggan Baru
     const newOrder = {
-        name: document.getElementById('billingName').value,
+        name: customerName,
         phone: num,
         email: document.getElementById('billingEmail').value,
         address: document.getElementById('billingAddress').value,
         paymentMethod: selectedGateway,
-        items: itemDetailsString.join(', '),
+        items: joinedItems,
         totalRevenue: currentTransactionTotal
     };
 
-    // Push data masuk ke database Log Penjualan Admin
+    // Push data masuk ke database Log Penjualan Admin (Local Storage)
     salesLog.push(newOrder);
     localStorage.setItem('erysh_sales_log', JSON.stringify(salesLog));
     localStorage.setItem('erysh_products', JSON.stringify(products));
 
-    alert(`✨ [PEMBAYARAN TERVERIFIKASI SUKSES] ✨\n\nMetode Bayar: ${selectedGateway}\nTotal Tagihan: Rp ${currentTransactionTotal.toLocaleString('id-ID')}\n\nStatus: Terbayar Lunas. Data transaksi pelanggan Anda telah otomatis terkirim langsung ke Halaman Admin Web!`);
-    
+    // INJEKSI DATA KE HALAMAN SUKSES (SUCCESS PAGE)
+    document.getElementById('successPaymentMethod').innerText = `🛡️ ${selectedGateway}`;
+    document.getElementById('successCustomerName').innerText = customerName;
+    document.getElementById('successItems').innerText = joinedItems;
+    document.getElementById('successItems').title = joinedItems; 
+    document.getElementById('successTotal').innerText = `Rp ${currentTransactionTotal.toLocaleString('id-ID')}`;
+
+    // Kosongkan keranjang belanja
     cart = [];
     updateCartUI();
     document.getElementById('checkoutForm').reset();
     renderProducts();
-    showPage('katalog-page');
+
+    // Alihkan tampilan langsung ke Payment Success Page secara mulus
+    showPage('success-page');
 }
 
 // 3. REKAP RENDER TABEL DATA PENJUALAN MASUK PADA ADMIN
