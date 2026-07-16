@@ -65,7 +65,7 @@ const initialProducts = [
         name: "Belle Bracelet", 
         category: "Grâce", 
         price: 799000, 
-        img: "assets/grace-bracelet.jpg", 
+        img: "assets/belle-bracelet.jpg", 
         stock: 3, 
         desc: "Belle Bracelet is meticulously handcrafted from 925 Sterling Silver and finished with premium 18K Gold Plating to create an elegant shine that lasts. The delicate floral details are enhanced with brilliant AAAAA Cubic Zirconia, adding refined sparkle without overwhelming the design.<br><br>Its adjustable clasp ensures a comfortable fit, making it suitable for daily wear while maintaining a luxurious appearance.",
         specs: ["Material: Premium 925 Sterling Silver", "Finish: Thick 18K Gold Plating", "Stone: AAAAA Cubic Zirconia", "Adjustable Clasp", "Hypoallergenic", "Tarnish Resistant", "Luxury Gift Box Included", "1-Year Warranty"]
